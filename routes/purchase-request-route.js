@@ -14,9 +14,8 @@ router.get('/', async (req, res) => {
 })
 
 router.post('/', async (req, res) => {
-    console.log("=========== " + req.body)
     const { error } = validation(req.body);
-    if(error) return res.status(400).send(error.message)
+    if(error) return res.status(400).send("Fruition backend error message: " + error.message)
 
     const p = new PurchaseRequest(req.body)
 
@@ -27,13 +26,17 @@ router.post('/', async (req, res) => {
 
 function validation(request) {
     const schema = Joi.object({
+        isEmergency: Joi.boolean(),
         quantity: Joi.number().min(1).required(),
         description: Joi.string().required(),
         manufacturer: Joi.string().required(),
         fruitionPn: Joi.string().optional(),
         requestDate: Joi.date().required(),
-        catagory: Joi.string().valid('engineering', 'shortage', 'tooling', 'supply', 'ppap', 'misc'),
-        createdBy: {type: {firstname: 'anon', lastname: 'anon'}}
+        catagory: Joi.string().valid('Engineering', 'Shortage', 'Tooling', 'Supply', 'PPAP', 'Misc', 'Equipment'),
+        createdBy: Joi.object({
+          firstname: Joi.string(),
+          lastname: Joi.string()
+        })
     })
 
     return schema.validate(request)
