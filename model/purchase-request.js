@@ -6,10 +6,14 @@ const model = new mongoose.model("Purchase-Request", new mongoose.Schema({
     description: {type: String, required: true},
     manufacturer: {type: String},
     fruitionPn: {type: String},
-    creationDate: {type: Date, default: Date.now()},
+    creationDate: {type: Date, default: () => Date.now()},
     requestDate: {type: Date, required: true},
     catagory: {type: String, enum: ['engineering', 'shortage', 'tooling', 'supply', 'ppap', 'misc']},
-    createdBy: {type: User}
+    createdBy: {type: {
+        firstname: String,
+        lastname: String,
+    }},
+    isResolved: {type: Boolean, default: false}
 }))
 
 module.exports = model
